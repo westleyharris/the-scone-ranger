@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Calistoga, Fraunces, Outfit } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
 import { site, story } from "@/lib/content";
 import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
+import { Header, HeaderFallback } from "@/components/Header";
 import { OrderProvider } from "@/components/OrderProvider";
 import { OrderSlip } from "@/components/OrderSlip";
 
@@ -36,6 +36,11 @@ export const metadata: Metadata = {
   description: story[0],
 };
 
+/** Matches the header bar, so phone browsers colour their own bar to meet it. */
+export const viewport: Viewport = {
+  themeColor: "#fbf6ee",
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
@@ -50,7 +55,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           >
             Skip to content
           </a>
-          <Suspense fallback={<div className="h-28 border-b border-line bg-cream" />}>
+          <Suspense fallback={<HeaderFallback />}>
             <Header />
           </Suspense>
           <main id="content" className="flex-1">
