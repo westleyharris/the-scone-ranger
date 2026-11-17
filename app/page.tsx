@@ -1,14 +1,12 @@
 import Link from "next/link";
-import { BrandMark } from "@/components/BrandMark";
-import { AddButton } from "@/components/FlavorBrowser";
 import { Container } from "@/components/Container";
+import { FlavorCard } from "@/components/FlavorCard";
+import { HeroPortrait } from "@/components/HeroPortrait";
 import { Eyebrow, Stitch } from "@/components/Marks";
-import { Photo } from "@/components/Photo";
 import { MarketList, StockistList } from "@/components/PlaceList";
 import {
   featured,
   findPrompt,
-  flavorSlug,
   marketsIntro,
   menuFollowup,
   site,
@@ -16,52 +14,36 @@ import {
   venuesIntro,
   wholesalePitch,
 } from "@/lib/content";
-import { flavorPhotoSlugs } from "@/lib/photos";
+import { flavorPhotoFor } from "@/lib/photo-types";
+import { flavorPhotos } from "@/lib/photos";
 
 export default function Home() {
   const [hook, ...rest] = story[0].split(" You see, ");
   const support = `You see, ${rest.join(" You see, ")}`;
-  const photographed = new Set(flavorPhotoSlugs());
+  const photos = flavorPhotos();
 
   return (
     <>
       <section>
-        <Container className="grid items-center gap-10 py-10 sm:py-14 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16 lg:py-20">
+        <Container className="grid items-center gap-12 py-10 sm:py-14 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16 lg:py-20">
           <div>
             <Eyebrow>{site.place}</Eyebrow>
-            <h1 className="mt-4 max-w-xl font-headline text-[1.85rem] leading-[1.16] text-ink sm:text-[2.65rem] sm:leading-[1.12] lg:text-[3.05rem]">
+            <h1 className="mt-4 max-w-xl font-headline text-[1.85rem] leading-[1.16] text-ink sm:text-[2.65rem] sm:leading-[1.12] lg:text-[3.15rem]">
               {hook}
             </h1>
             <Stitch className="mt-5 w-24 text-rope" />
             <p className="mt-5 max-w-md text-base leading-7 text-bark sm:text-lg sm:leading-8">{support}</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/flavors"
-                className="btn btn-solid"
-              >
+              <Link href="/flavors" className="btn btn-solid">
                 Flavors
               </Link>
-              <Link
-                href="/find-us"
-                className="btn btn-line"
-              >
+              <Link href="/find-us" className="btn btn-line">
                 Find Us
               </Link>
             </div>
           </div>
-          <div className="relative mx-auto w-full max-w-xl pb-8 lg:max-w-none">
-            <Photo
-              file="hero-scone.jpg"
-              label="David and Evelyn Ainley, the owners of The Scone Ranger"
-              frame="blob"
-              fit="cover"
-            />
-            <div className="seal-sway absolute -bottom-2 left-3 z-10 w-20 sm:left-5 sm:w-28">
-              <BrandMark
-                alt="Hand-crafted by the Scone Ranger, Spokane, WA"
-                className="aspect-square w-full shadow-[0_14px_30px_rgba(42,33,28,0.22)]"
-              />
-            </div>
+          <div className="mx-auto w-full max-w-xl lg:max-w-none">
+            <HeroPortrait />
           </div>
         </Container>
       </section>
@@ -69,37 +51,27 @@ export default function Home() {
       <Stitch className="text-bark/55" />
       <section className="bg-paper">
         <Container className="py-16 lg:py-24">
-          <div className="max-w-2xl">
-            <Eyebrow>The menu</Eyebrow>
-            <p className="mt-4 text-lg leading-8">{menuFollowup}</p>
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
+            <div className="max-w-2xl">
+              <Eyebrow>The menu</Eyebrow>
+              <p className="mt-4 text-lg leading-8">{menuFollowup}</p>
+            </div>
+            <Link href="/flavors" className="btn btn-line self-start sm:self-auto">
+              All flavors
+            </Link>
           </div>
-          <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((item) => (
-              <li key={item.name} className="flex flex-col overflow-hidden rounded-3xl bg-cream ring-1 ring-line">
-                {photographed.has(flavorSlug(item.name)) ? (
-                  <div className="aspect-[4/3] bg-foam">
-                    <Photo file={`flavors/${flavorSlug(item.name)}.jpg`} label={item.name} showLabel={false} />
-                  </div>
-                ) : null}
-                <div className="flex flex-1 flex-col gap-4 p-5">
-                  <div>
-                    <h2 className="font-display text-[1.7rem] leading-none text-ink">{item.name}</h2>
-                    <Stitch className="mt-3 w-10 text-rope" />
-                    <p className="mt-3 text-sm leading-6 text-bark">{item.quote}</p>
-                  </div>
-                  <div className="mt-auto">
-                    <AddButton name={item.name} />
-                  </div>
-                </div>
-              </li>
+          <ul className="mt-14 grid grid-cols-2 gap-x-6 gap-y-16 sm:grid-cols-3 sm:gap-x-10 lg:mt-20 lg:gap-x-16 lg:gap-y-20">
+            {featured.map((name) => (
+              <FlavorCard
+                key={name}
+                name={name}
+                photo={flavorPhotoFor(photos, name)}
+                surface="paper"
+                featured
+                sizes="(min-width: 1024px) 28vw, (min-width: 640px) 28vw, 44vw"
+              />
             ))}
           </ul>
-          <Link
-            href="/flavors"
-            className="mt-8 inline-flex text-sm font-semibold text-ranger underline decoration-ranger/30 underline-offset-4 hover:decoration-ranger"
-          >
-            All flavors
-          </Link>
         </Container>
       </section>
       <Stitch className="text-bark/55" />

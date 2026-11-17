@@ -139,19 +139,491 @@ body {
   box-shadow: none;
 }
 
-@keyframes seal-sway {
-  0%,
-  100% {
-    transform: translateY(0) rotate(-2.5deg);
-  }
-  50% {
-    transform: translateY(-8px) rotate(2.5deg);
+/*
+  Home hero: a letterpress WANTED broadside hung from one nail.
+  .wanted-wrap sets the poster width (--p) and a font-size of --p / 30;
+  everything inside is in em, so the lockup scales as a single piece.
+*/
+.hero-stage {
+  container-type: inline-size;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0 1.75rem;
+}
+
+.wanted-wrap {
+  --p: min(100cqw - 2rem, 29rem);
+  position: relative;
+  width: var(--p);
+  font-size: calc(var(--p) / 30);
+}
+
+.wanted {
+  position: relative;
+  margin: 0;
+  padding: 3em 2.15em 1.55em;
+  color: var(--ranger);
+  text-align: center;
+  /* Pivot on the nail; the nudge left re-centres the hanging sheet. */
+  transform-origin: 50% 1.1em;
+  transform: translateX(-0.6em) rotate(-2deg);
+  animation: wanted-settle 1.5s ease-in-out both;
+}
+
+/* Ambient shadow: a plain box tucked just inside the sheet's cut edge. */
+.wanted::before {
+  content: "";
+  position: absolute;
+  inset: 1.5% 2.2% 1.2%;
+  box-shadow:
+    0 0.35em 0.6em rgba(42, 33, 28, 0.1),
+    0 1.3em 1.7em rgba(42, 33, 28, 0.22);
+  pointer-events: none;
+}
+
+/*
+  Children are positioned (never z-indexed) so they paint over the sheet
+  without isolating: the ink and the photo multiply into the paper grain.
+*/
+.wanted-paper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.wanted-nail {
+  position: absolute;
+  top: 0.6em;
+  left: 50%;
+  width: 1em;
+  height: 1em;
+  margin-left: -0.5em;
+  border-radius: 50%;
+  background: radial-gradient(circle at 36% 30%, #9a7b68 0%, #4a342c 38%, #1a110e 100%);
+  box-shadow:
+    0 0.1em 0.08em rgba(26, 17, 14, 0.5),
+    0.22em 0.5em 0.45em rgba(42, 33, 28, 0.3);
+}
+
+.wanted-title,
+.wanted-charge,
+.wanted figcaption {
+  position: relative;
+  mix-blend-mode: multiply;
+}
+
+.wanted-title {
+  font-family: var(--font-calistoga), Georgia, "Times New Roman", serif;
+  font-size: 5.55em;
+  line-height: 0.88;
+  letter-spacing: 0.06em;
+  /* Balances the trailing letter-space so the word sits optically centred. */
+  text-indent: 0.06em;
+  text-transform: uppercase;
+}
+
+.wanted-charge {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  margin-top: 0.62em;
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-size: 1.14em;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.wanted-charge::before,
+.wanted-charge::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.wanted-photo {
+  position: relative;
+  margin-top: 1em;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border: 0.14em solid var(--ranger);
+}
+
+/* Burnt-in corners, like an old plate. */
+.wanted-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 2.2em rgba(42, 28, 24, 0.35);
+  pointer-events: none;
+}
+
+/*
+  Crops the 2048 × 1155 original to the couple (x 480–1900, y 95–1042)
+  and prints it in sepia; hovering the poster brings the colour back.
+*/
+.wanted-photo-img {
+  position: absolute;
+  top: -10%;
+  left: -33.8%;
+  width: 144.2%;
+  max-width: none;
+  height: auto;
+  filter: grayscale(1) sepia(0.4) contrast(1.12) brightness(1.12);
+  mix-blend-mode: multiply;
+  transition: filter 700ms ease;
+}
+
+@media (hover: hover) {
+  .wanted:hover .wanted-photo-img {
+    filter: grayscale(0) sepia(0) contrast(1) brightness(1);
   }
 }
 
-.seal-sway {
-  animation: seal-sway 6.5s ease-in-out infinite;
-  transform-origin: 50% 60%;
+.wanted-name {
+  margin-top: 0.6em;
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-size: 1.95em;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.wanted-aka {
+  margin-top: 0.8em;
+  font-size: 0.78em;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+  text-transform: uppercase;
+  color: var(--bark);
+  white-space: nowrap;
+}
+
+/* The left bay of the reward line belongs to the scone. */
+.wanted-reward {
+  margin-top: 1.1em;
+  padding: 0.85em 0 0 7.4em;
+  border-top: 0.22em double rgba(58, 42, 36, 0.75);
+}
+
+.wanted-reward-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.36em;
+  font-family: var(--font-calistoga), Georgia, "Times New Roman", serif;
+  font-size: 2.55em;
+  line-height: 0.95;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Ranger stars either side. */
+.wanted-reward-title::before,
+.wanted-reward-title::after {
+  content: "";
+  width: 0.4em;
+  height: 0.4em;
+  background: currentColor;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+/* Cancels the word's trailing letter-space so both stars sit evenly. */
+.wanted-reward-title::after {
+  margin-left: -0.1em;
+}
+
+.wanted-reward-line {
+  margin-top: 0.3em;
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-size: 1.22em;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* Sits in front of the sheet, off its bottom-left corner. */
+.hero-scone {
+  position: absolute;
+  z-index: 2;
+  bottom: -1.35em;
+  left: -2.75em;
+  width: 11em;
+  max-width: none;
+  height: auto;
+  filter: drop-shadow(0 1.1em 0.85em rgba(42, 33, 28, 0.34));
+  pointer-events: none;
+}
+
+/* Phone-width poster: keep the small print legible and the scone on screen. */
+@container (max-width: 24rem) {
+  .wanted-aka {
+    font-size: 0.9em;
+    letter-spacing: 0.17em;
+    text-indent: 0.17em;
+  }
+
+  .hero-scone {
+    left: -2.1em;
+  }
+}
+
+/*
+  A damped swing on the nail. It starts clockwise so the first, widest arc
+  carries the foot of the sheet left; swinging right would overflow a phone.
+*/
+@keyframes wanted-settle {
+  0% {
+    transform: translateX(-0.6em) rotate(3.5deg);
+  }
+  38% {
+    transform: translateX(-0.6em) rotate(-3.6deg);
+  }
+  64% {
+    transform: translateX(-0.6em) rotate(-1.2deg);
+  }
+  84% {
+    transform: translateX(-0.6em) rotate(-2.4deg);
+  }
+  100% {
+    transform: translateX(-0.6em) rotate(-2deg);
+  }
+}
+
+/* Flavor cards: arched niche with a seal-style add button on its lip. */
+.flavor-tile {
+  --surface: var(--cream);
+  border-radius: 999px 999px 1.5rem 1.5rem;
+  background:
+    radial-gradient(80% 55% at 50% 18%, rgba(251, 246, 238, 0.98), rgba(251, 246, 238, 0) 70%),
+    radial-gradient(70% 45% at 50% 88%, rgba(92, 67, 54, 0.08), transparent 70%),
+    linear-gradient(180deg, #f3e6d3 0%, var(--foam) 48%, #e2cfb4 100%);
+  isolation: isolate;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.flavor-tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  box-shadow:
+    inset 0 0 0 1px rgba(58, 42, 36, 0.28),
+    inset 0 0 0 6px var(--surface),
+    inset 0 0 0 7px rgba(196, 165, 116, 0.95),
+    inset 0 -34px 40px -26px rgba(42, 33, 28, 0.2);
+  transition: box-shadow 260ms ease;
+}
+
+.group:hover .flavor-tile {
+  transform: translateY(-3px);
+}
+
+.group:hover .flavor-tile::after {
+  box-shadow:
+    inset 0 0 0 1px rgba(58, 42, 36, 0.5),
+    inset 0 0 0 6px var(--surface),
+    inset 0 0 0 7px var(--rope),
+    inset 0 -34px 40px -26px rgba(42, 33, 28, 0.26);
+}
+
+/* Soft floor under a floating cut-out. */
+.flavor-plate-glow {
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 14%;
+  height: 18%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(42, 33, 28, 0.22), transparent 70%);
+  filter: blur(2px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.flavor-cutout {
+  z-index: 0;
+  filter: drop-shadow(0 16px 12px rgba(42, 33, 28, 0.26));
+  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.group:hover .flavor-cutout {
+  transform: translateY(-5px) scale(1.03) rotate(-1.25deg);
+}
+
+/* Tray / photo shots sit as an oval plate so they rhyme with cut-outs. */
+.flavor-medallion {
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  top: 12%;
+  bottom: 18%;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #2a1c18;
+  box-shadow:
+    0 0 0 1px rgba(58, 42, 36, 0.28),
+    0 0 0 4px var(--surface),
+    0 0 0 5px rgba(196, 165, 116, 0.85),
+    0 20px 28px -12px rgba(42, 33, 28, 0.38);
+  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.flavor-medallion::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(160deg, rgba(246, 239, 228, 0.18), transparent 42%, rgba(42, 33, 28, 0.12) 100%);
+  box-shadow: inset 0 0 0 1px rgba(246, 239, 228, 0.28);
+  z-index: 1;
+}
+
+.group:hover .flavor-medallion {
+  transform: translateY(-4px) scale(1.025);
+}
+
+.flavor-photo {
+  transform: scale(1.08);
+  transition: transform 700ms ease;
+}
+
+.group:hover .flavor-photo {
+  transform: scale(1.14);
+}
+
+.add-seal {
+  width: 2.9rem;
+  height: 2.9rem;
+  border-radius: 9999px;
+  background-color: var(--ranger);
+  color: var(--paper);
+  z-index: 2;
+  box-shadow:
+    0 0 0 4px var(--surface),
+    inset 0 0 0 1px rgba(232, 196, 138, 0.8),
+    inset 0 0 0 4px var(--ranger),
+    inset 0 0 0 5px rgba(232, 196, 138, 0.45),
+    0 10px 18px -6px rgba(42, 33, 28, 0.4);
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.add-seal:hover {
+  background-color: var(--ranger-deep);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow:
+    0 0 0 4px var(--surface),
+    inset 0 0 0 1px rgba(232, 196, 138, 0.95),
+    inset 0 0 0 4px var(--ranger-deep),
+    inset 0 0 0 5px rgba(232, 196, 138, 0.6),
+    0 14px 20px -6px rgba(42, 33, 28, 0.45);
+}
+
+.add-seal:active {
+  transform: scale(0.94);
+}
+
+.add-seal[data-on-slip] {
+  background-color: var(--rope);
+  color: var(--ranger-deep);
+  box-shadow:
+    0 0 0 4px var(--surface),
+    inset 0 0 0 1px var(--ranger),
+    inset 0 0 0 4px var(--rope),
+    inset 0 0 0 5px rgba(58, 42, 36, 0.5),
+    0 10px 18px -6px rgba(42, 33, 28, 0.35);
+}
+
+.add-seal[data-on-slip]:hover {
+  background-color: #f0d09a;
+}
+
+@keyframes scone-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(16px) rotate(-8deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(-8deg);
+  }
+}
+
+.scone-arrive {
+  animation: scone-arrive 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+
+@keyframes flavor-popup-veil {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes flavor-popup-panel {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes flavor-popup-scone {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.92) rotate(-4deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+}
+
+.flavor-popup-veil {
+  animation: flavor-popup-veil 220ms ease both;
+}
+
+.flavor-popup-panel {
+  animation: flavor-popup-panel 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.flavor-popup-stage {
+  background:
+    radial-gradient(70% 60% at 50% 35%, rgba(251, 246, 238, 0.95), transparent 70%),
+    linear-gradient(180deg, #efe0cb 0%, var(--foam) 55%, #e4d0b4 100%);
+}
+
+.flavor-popup-halo {
+  position: absolute;
+  inset: 12% 18% 22%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(246, 239, 228, 0.9), transparent 70%);
+  pointer-events: none;
+}
+
+.flavor-popup-scone {
+  animation: flavor-popup-scone 560ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both;
 }
 
 @keyframes stitch-spin {
@@ -199,13 +671,42 @@ body {
     scroll-behavior: auto;
   }
 
-  .seal-sway,
+  .scone-arrive {
+    animation: none;
+    opacity: 1;
+    transform: rotate(-8deg);
+  }
+
+  .wanted {
+    animation: none;
+  }
+
+  .wanted-photo-img {
+    transition: none;
+  }
+
+  .flavor-popup-veil,
+  .flavor-popup-panel,
+  .flavor-popup-scone {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
   .stitch-spin {
     animation: none;
   }
 
   .poster-still,
-  .group:hover .poster-still {
+  .group:hover .poster-still,
+  .flavor-tile,
+  .group:hover .flavor-tile,
+  .flavor-cutout,
+  .group:hover .flavor-cutout,
+  .flavor-medallion,
+  .group:hover .flavor-medallion,
+  .flavor-photo,
+  .group:hover .flavor-photo {
     transform: none;
     transition: none;
   }

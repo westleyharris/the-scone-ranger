@@ -64,7 +64,7 @@ export const emptyCustomer: Customer = {
 
 export function defaultRetailTier(name: string): RetailTier {
   if (/huckleberry/i.test(name)) return "huckleberry";
-  if (/cheddar|cheese/i.test(name)) return "cheese";
+  if (/cheddar|cheese/i.test(name) && !/cream cheese/i.test(name)) return "cheese";
   return "standard";
 }
 

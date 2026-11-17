@@ -200,13 +200,27 @@ export const testimonies = [
   "“These strawberry scones are delicious!!! Very moist and the frosting is the perfect touch of sweetness…Yummy!!! This flavor is definitely a keeper.” -Jami",
 ] as const;
 
+function foldText(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+}
+
+/** First testimony that names this flavor, if any. */
+export function quoteForFlavor(name: string) {
+  const bare = foldText(name.replace(/\s*\(seasonal\)\s*/i, " ").trim());
+  return testimonies.find((quote) => foldText(quote).includes(bare));
+}
+
+/** Home menu highlights — flavors with single-scone cut-outs photograph best here. */
 export const featured = [
-  { name: "Orange Cranberry", quote: testimonies[22] },
-  { name: "Lemon Blueberry", quote: testimonies[3] },
-  { name: "Peppermint Bark", quote: testimonies[1] },
-  { name: "Piña Colada", quote: testimonies[2] },
-  { name: "German Sweet Chocolate", quote: testimonies[25] },
-  { name: "Strawberry", quote: testimonies[26] },
+  "Orange Cranberry",
+  "Salted Caramel Scotchies",
+  "Lemon Lavender",
+  "Tropical Paradise",
+  "Raspberry",
+  "Strawberry Lemonade",
 ] as const;
 
 export const orderHeading =

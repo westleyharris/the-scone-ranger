@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState, useSyncExternalStore } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import {
   defaultRetailTier,
   emptyCustomer,
@@ -26,7 +26,7 @@ const serverSnapshot: Stored = {
 };
 
 let snapshot: Stored = serverSnapshot;
-let loaded = false;
+let clientReady = false;
 const listeners = new Set<() => void>();
 
 function lineKey(name: string, tier: string) {
@@ -79,21 +79,11 @@ function readStorage(): Stored {
 
 function subscribe(listener: () => void) {
   listeners.add(listener);
-  if (!loaded) {
-    loaded = true;
-    queueMicrotask(() => {
-      if (snapshot !== serverSnapshot) return;
-      const stored = readStorage();
-      if (stored === serverSnapshot) return;
-      snapshot = stored;
-      listeners.forEach((notify) => notify());
-    });
-  }
   return () => listeners.delete(listener);
 }
 
 function getSnapshot() {
-  return snapshot;
+  return clientReady ? snapshot : serverSnapshot;
 }
 
 function getServerSnapshot() {
@@ -126,6 +116,12 @@ const OrderContext = createContext<OrderContextValue | null>(null);
 export function OrderProvider({ children }: { children: React.ReactNode }) {
   const stored = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    clientReady = true;
+    snapshot = readStorage();
+    listeners.forEach((listener) => listener());
+  }, []);
 
   const value = useMemo<OrderContextValue>(
     () => ({

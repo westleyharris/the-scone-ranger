@@ -3,7 +3,7 @@ import { Container } from "@/components/Container";
 import { FlavorBrowser } from "@/components/FlavorBrowser";
 import { PageIntro } from "@/components/PageIntro";
 import { menuFollowup, menuNote } from "@/lib/content";
-import { flavorPhotoSlugs } from "@/lib/photos";
+import { flavorPhotos } from "@/lib/photos";
 
 export const metadata: Metadata = {
   title: "Flavors",
@@ -18,7 +18,7 @@ export default function FlavorsPage() {
         <p>{menuFollowup}</p>
       </PageIntro>
       <div className="mt-10">
-        <FlavorBrowser photos={flavorPhotoSlugs()} />
+        <FlavorBrowser photos={flavorPhotos()} />
       </div>
     </Container>
   );

@@ -1,27 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { flavorNames, flavorSlug } from "@/lib/content";
-import { useOrder } from "@/components/OrderProvider";
-import { Photo } from "@/components/Photo";
+import { flavorNames } from "@/lib/content";
+import { FlavorCard } from "@/components/FlavorCard";
+import { flavorPhotoFor, type FlavorPhotos } from "@/lib/photo-types";
 
-export function AddButton({ name }: { name: string }) {
-  const { addFlavor } = useOrder();
-  return (
-    <button
-      type="button"
-      onClick={() => addFlavor(name)}
-      className="btn btn-solid btn-sm"
-    >
-      Add to slip
-    </button>
-  );
-}
-
-export function FlavorBrowser({ photos }: { photos: readonly string[] }) {
+export function FlavorBrowser({ photos }: { photos: FlavorPhotos }) {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<"listed" | "az">("listed");
-  const photographed = useMemo(() => new Set(photos), [photos]);
 
   const flavors = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -69,25 +55,9 @@ export function FlavorBrowser({ photos }: { photos: readonly string[] }) {
       {flavors.length === 0 ? (
         <p className="mt-10 text-bark">No flavors match.</p>
       ) : (
-        <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-12 grid grid-cols-2 gap-x-4 gap-y-12 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-14">
           {flavors.map((name) => (
-            <li key={name} className="flex flex-col overflow-hidden rounded-3xl bg-paper ring-1 ring-line">
-              {photographed.has(flavorSlug(name)) ? (
-                <div className="aspect-square bg-foam">
-                  <Photo file={`flavors/${flavorSlug(name)}.jpg`} label={name} showLabel={false} />
-                </div>
-              ) : (
-                <div className="flex h-24 items-end bg-foam px-5 pb-4" aria-hidden="true">
-                  <span className="font-display text-4xl leading-none text-ranger/25">{name.charAt(0)}</span>
-                </div>
-              )}
-              <div className="flex flex-1 flex-col gap-4 p-5">
-                <h2 className="font-display text-[1.65rem] leading-none text-ink">{name}</h2>
-                <div className="mt-auto">
-                  <AddButton name={name} />
-                </div>
-              </div>
-            </li>
+            <FlavorCard key={name} name={name} photo={flavorPhotoFor(photos, name)} />
           ))}
         </ul>
       )}

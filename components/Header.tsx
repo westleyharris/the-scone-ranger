@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { nav, site } from "@/lib/content";
 import { BrandMark } from "@/components/BrandMark";
 import { useOrder } from "@/components/OrderProvider";
@@ -10,10 +10,19 @@ import { useOrder } from "@/components/OrderProvider";
 const leftNav = [nav[0], nav[2]];
 const rightNav = [nav[1], nav[3]];
 
+function useClientReady() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+}
+
 export function Header() {
   const pathname = usePathname();
   const { lines, setOpen } = useOrder();
-  const count = lines.length;
+  const ready = useClientReady();
+  const count = ready ? lines.length : 0;
   const [menu, setMenu] = useState({ open: false, path: pathname });
   const menuOpen = menu.open && menu.path === pathname;
 
