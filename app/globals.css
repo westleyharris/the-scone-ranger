@@ -714,11 +714,14 @@ body {
 .flavor-cutout {
   z-index: 0;
   filter: drop-shadow(0 16px 12px rgba(42, 33, 28, 0.26));
+  /* Landscape cut-outs sit short in the arch — scale up so the scone owns the niche. */
+  transform: scale(1.32);
+  transform-origin: center 55%;
   transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .group:hover .flavor-cutout {
-  transform: translateY(-5px) scale(1.03) rotate(-1.25deg);
+  transform: translateY(-4px) scale(1.38) rotate(-1.25deg);
 }
 
 /* Tray / photo shots sit as an oval plate so they rhyme with cut-outs. */
@@ -970,13 +973,18 @@ body {
   .group:hover .poster-still,
   .flavor-tile,
   .group:hover .flavor-tile,
-  .flavor-cutout,
-  .group:hover .flavor-cutout,
   .flavor-medallion,
   .group:hover .flavor-medallion,
   .flavor-photo,
   .group:hover .flavor-photo {
     transform: none;
+    transition: none;
+  }
+
+  /* Keep the size boost; only drop the hover motion. */
+  .flavor-cutout,
+  .group:hover .flavor-cutout {
+    transform: scale(1.32);
     transition: none;
   }
 

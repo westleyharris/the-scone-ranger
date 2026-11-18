@@ -42,7 +42,7 @@ export function HeroPortrait() {
         </figure>
 
         <Image
-          src="/images/hero-orange-cranberry.png"
+          src="/images/hero-orange-cranberry-cutout.png"
           alt=""
           aria-hidden="true"
           width={1100}

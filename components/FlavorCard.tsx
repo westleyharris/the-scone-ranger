@@ -64,7 +64,7 @@ export function FlavorCard({
           aria-haspopup="dialog"
           aria-expanded={open}
           className={`flavor-tile relative w-full cursor-pointer overflow-hidden text-left transition-[transform,filter] ${
-            featured ? "aspect-[3/4]" : "aspect-[4/5]"
+            featured ? "aspect-[5/6]" : "aspect-square"
           }`}
         >
           <span className="sr-only">Open {name} details</span>
@@ -78,7 +78,7 @@ export function FlavorCard({
                   fill
                   sizes={sizes}
                   className={`flavor-cutout object-contain object-center ${
-                    featured ? "p-[6%] pt-[10%] pb-[16%]" : "p-[9%] pt-[12%] pb-[18%]"
+                    featured ? "p-[1%] pt-[2%] pb-[8%]" : "p-[1%] pt-[2%] pb-[8%]"
                   }`}
                 />
               </>

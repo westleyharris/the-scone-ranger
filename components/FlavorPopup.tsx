@@ -113,7 +113,7 @@ export function FlavorPopup({
                     alt={`${name} scone`}
                     fill
                     sizes="(min-width: 640px) 320px, 70vw"
-                    className="flavor-popup-scone object-contain object-center p-[4%] drop-shadow-[0_22px_18px_rgba(42,33,28,0.32)]"
+                    className="flavor-popup-scone object-contain object-center p-[1%] drop-shadow-[0_22px_18px_rgba(42,33,28,0.32)] scale-[1.12]"
                     priority
                   />
                 </>
