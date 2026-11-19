@@ -9,6 +9,7 @@ import {
   volumeNote,
   wholesalePrices,
 } from "@/lib/content";
+import { monthName, weekdayNames } from "@/lib/market-schedule";
 
 export const retailTiers = [
   { id: "standard", label: "Standard", price: 50 },
@@ -50,6 +51,8 @@ export type Customer = {
   address: string;
   note: string;
   cafe: string;
+  /** "YYYY-MM-DD" from the date field, or "" when not given. */
+  neededBy: string;
 };
 
 export const emptyCustomer: Customer = {
@@ -60,6 +63,7 @@ export const emptyCustomer: Customer = {
   address: "",
   note: "",
   cafe: "",
+  neededBy: "",
 };
 
 export function defaultRetailTier(name: string): RetailTier {
@@ -91,8 +95,18 @@ export function slipTotal(mode: OrderMode, lines: OrderLine[], delivery: boolean
   return goods + (delivery ? 6 : 0);
 }
 
+/** "Saturday, November 21" from "2026-11-21"; "" if the value isn't a date. */
+export function formatNeededBy(value: string) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return "";
+  const [year, month, day] = match.slice(1).map(Number);
+  const weekday = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+  return `${weekdayNames[weekday]}, ${monthName(month)} ${day}`;
+}
+
 export function orderText(mode: OrderMode, lines: OrderLine[], customer: Customer) {
   const delivery = customer.fulfillment === "delivery";
+  const neededBy = formatNeededBy(customer.neededBy);
   const itemLines = lines.map((line) => {
     const price = priceFor(mode, line.tier);
     return `${line.name} — ${line.scones} scones — ${labelFor(mode, line.tier)} — $${price}/dozen — $${lineTotal(mode, line)}`;
@@ -108,6 +122,7 @@ export function orderText(mode: OrderMode, lines: OrderLine[], customer: Custome
     customer.email ? `Email: ${customer.email}` : "",
     `Pickup or delivery: ${delivery ? "Delivery" : "Pickup"}`,
     delivery && customer.address ? `Address: ${customer.address}` : "",
+    neededBy ? `Needed by: ${neededBy}` : "",
     "",
     ...itemLines,
     "",
@@ -134,4 +149,35 @@ export function mailtoHref(mode: OrderMode, lines: OrderLine[], customer: Custom
       ? `Wholesale scone order — ${customer.cafe || customer.name}`
       : `Scone order — ${customer.name}`;
   return `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(orderText(mode, lines, customer))}`;
+}
+
+/**
+ * The order as a text message: just what the bakery needs to reply,
+ * without the price list the email carries.
+ */
+export function orderMessage(mode: OrderMode, lines: OrderLine[], customer: Customer) {
+  const delivery = customer.fulfillment === "delivery";
+  const neededBy = formatNeededBy(customer.neededBy);
+  const head = [
+    mode === "wholesale" ? `Coffee shop order${customer.cafe ? ` for ${customer.cafe}` : ""}` : "Scone order",
+    `From: ${customer.name}`,
+    neededBy ? `Needed by: ${neededBy}` : "",
+    delivery ? `Delivery${customer.address ? ` to ${customer.address}` : ""}` : "Pickup",
+  ];
+  const items = lines.map(
+    (line) => `${line.name}: ${line.scones} scones (${labelFor(mode, line.tier)}) $${lineTotal(mode, line)}`,
+  );
+  const foot = [
+    `Estimated total: $${slipTotal(mode, lines, delivery)}${delivery ? " incl. $6 delivery" : ""}`,
+    customer.note ? `Note: ${customer.note}` : "",
+  ];
+  return [head, items, foot]
+    .map((block) => block.filter(Boolean).join("\n"))
+    .filter(Boolean)
+    .join("\n\n");
+}
+
+/** Opens Messages with the order filled in. "?&body=" is the form both iOS and Android read. */
+export function smsHref(mode: OrderMode, lines: OrderLine[], customer: Customer) {
+  return `${site.smsHref}?&body=${encodeURIComponent(orderMessage(mode, lines, customer))}`;
 }

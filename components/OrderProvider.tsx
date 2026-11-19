@@ -64,6 +64,7 @@ function sanitize(value: unknown): Stored {
     : [];
   const customer = { ...emptyCustomer, ...(parsed.customer ?? {}) };
   if (customer.fulfillment !== "delivery") customer.fulfillment = "pickup";
+  if (typeof customer.neededBy !== "string") customer.neededBy = "";
   return { mode, lines: mergeLines(lines), customer };
 }
 
@@ -104,7 +105,8 @@ type OrderContextValue = {
   lines: OrderLine[];
   customer: Customer;
   setCustomer: (patch: Partial<Customer>) => void;
-  addFlavor: (name: string) => void;
+  /** Adds 6 of a flavor. Opens the slip drawer unless `reveal` is false (the slip is already on screen). */
+  addFlavor: (name: string, options?: { reveal?: boolean }) => void;
   setScones: (key: string, scones: number) => void;
   setTier: (key: string, tier: string) => void;
   removeLine: (key: string) => void;
@@ -143,7 +145,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
         });
       },
       setCustomer: (patch) => write({ ...stored, customer: { ...stored.customer, ...patch } }),
-      addFlavor: (name) => {
+      addFlavor: (name, options) => {
         const tier = stored.mode === "wholesale" ? "standard" : defaultRetailTier(name);
         const key = lineKey(name, tier);
         const existing = stored.lines.find((line) => line.key === key);
@@ -153,7 +155,7 @@ export function OrderProvider({ children }: { children: React.ReactNode }) {
             )
           : [...stored.lines, { key, name, tier, scones: MIN_SCONES }];
         write({ ...stored, lines });
-        setOpen(true);
+        if (options?.reveal !== false) setOpen(true);
       },
       setScones: (key, scones) => {
         write({

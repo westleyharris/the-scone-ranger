@@ -34,6 +34,13 @@ export const metadata: Metadata = {
     template: `%s · ${site.name}`,
   },
   description: story[0],
+  // iOS Safari otherwise wraps plain-text phone numbers and street addresses in its own
+  // links before React loads, which breaks hydration. The site already links them itself.
+  formatDetection: {
+    telephone: false,
+    address: false,
+    email: false,
+  },
 };
 
 /** Matches the header bar, so phone browsers colour their own bar to meet it. */

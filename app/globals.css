@@ -927,6 +927,476 @@ body {
   }
 }
 
+/*
+  Find Us: a "right now" card that follows the market season, then the
+  venues, then a week strip and one card per market day.
+*/
+.right-now {
+  display: grid;
+  gap: 1.75rem;
+  margin-top: 2.5rem;
+  padding: 1.75rem 1.5rem;
+  border-radius: 1.5rem;
+  background-color: var(--ranger);
+  color: var(--paper);
+  /* The same gold double ring as the solid buttons. */
+  box-shadow:
+    inset 0 0 0 1px rgba(232, 196, 138, 0.4),
+    inset 0 0 0 7px var(--ranger),
+    inset 0 0 0 8px rgba(232, 196, 138, 0.2),
+    0 24px 44px -28px rgba(42, 33, 28, 0.6);
+}
+
+@media (min-width: 768px) {
+  .right-now {
+    padding: 2.25rem 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .right-now {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 3rem;
+    padding: 2.5rem 3rem;
+  }
+}
+
+.right-now-eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--rope);
+}
+
+.right-now-dot {
+  position: relative;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: var(--rope);
+}
+
+/* A slow ring off the dot while a market is on today. */
+.right-now-dot[data-live]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--rope);
+  animation: right-now-pulse 2.4s ease-out infinite;
+}
+
+@keyframes right-now-pulse {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(3);
+  }
+}
+
+.right-now-markets {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+  padding: 1.25rem 0;
+  border-top: 1px solid rgba(251, 246, 238, 0.14);
+  border-bottom: 1px solid rgba(251, 246, 238, 0.14);
+}
+
+@media (min-width: 768px) {
+  .right-now-markets {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 2.5rem;
+  }
+}
+
+.right-now-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+
+.right-now-actions p {
+  text-wrap: balance;
+}
+
+@media (min-width: 1024px) {
+  .right-now-actions {
+    align-items: flex-end;
+    max-width: 16.5rem;
+    text-align: right;
+  }
+}
+
+/* Sun–Sat stamps on a thread; the caption sits below without moving the row. */
+.week-strip {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 1.4rem;
+  --stamp: 2.6rem;
+}
+
+@media (min-width: 640px) {
+  .week-strip {
+    --stamp: 3.5rem;
+  }
+}
+
+.week-strip::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--stamp) / 2);
+  right: calc(var(--stamp) / 2);
+  left: calc(var(--stamp) / 2);
+  height: 1px;
+  background-color: var(--line);
+}
+
+.week-strip li {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.week-stamp {
+  position: relative;
+  display: grid;
+  width: var(--stamp);
+  height: var(--stamp);
+  place-items: center;
+  border-radius: 50%;
+  background-color: var(--cream);
+  box-shadow: inset 0 0 0 1px rgba(92, 67, 54, 0.16);
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-size: calc(var(--stamp) * 0.27);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: rgba(92, 67, 54, 0.45);
+}
+
+/* Market days: the dotted rope ring of the day stamps used elsewhere on the site. */
+.week-stamp[data-market] {
+  background-color: var(--paper);
+  border: 2px dotted var(--rope);
+  box-shadow:
+    inset 0 0 0 3px var(--paper),
+    inset 0 0 0 4px rgba(58, 42, 36, 0.24);
+  color: var(--ranger);
+}
+
+.week-stamp[data-today] {
+  background-color: var(--ranger);
+  border-color: var(--rope);
+  box-shadow: 0 6px 14px -6px rgba(42, 33, 28, 0.5);
+  color: var(--paper);
+}
+
+.week-stamp-link {
+  border-radius: 50%;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) {
+  .week-stamp-link:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.week-today {
+  position: absolute;
+  top: calc(100% + 0.45rem);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ranger);
+}
+
+.market-day {
+  border-radius: 1.25rem;
+  background-color: var(--paper);
+  box-shadow: inset 0 0 0 1px var(--line);
+  padding: 1.5rem 1.5rem 0.25rem;
+  /* Clears the sticky header and the seal hanging below it. */
+  scroll-margin-top: 7.5rem;
+}
+
+@media (min-width: 1024px) {
+  .market-day {
+    scroll-margin-top: 10.5rem;
+  }
+}
+
+.market-day[data-today] {
+  box-shadow:
+    inset 0 0 0 1px var(--ranger),
+    inset 0 0 0 5px var(--paper),
+    inset 0 0 0 6px rgba(196, 165, 116, 0.85),
+    0 18px 36px -24px rgba(42, 33, 28, 0.5);
+}
+
+.market-day-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.market-day-count,
+.market-season {
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(92, 67, 54, 0.75);
+}
+
+/* Negative margin keeps the pill from making this card's header taller than its neighbours. */
+.market-day-today {
+  margin: -0.3rem 0;
+  border-radius: 9999px;
+  background-color: var(--ranger);
+  padding: 0.3rem 0.65rem;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--paper);
+}
+
+.market-day-item {
+  padding: 1.15rem 0 1.25rem;
+}
+
+.market-day-item + .market-day-item {
+  border-top: 1px solid var(--line);
+}
+
+/* Order slip fields. 16px text stops iOS zooming in when a field is focused. */
+.slip-input {
+  display: block;
+  width: 100%;
+  min-height: 2.75rem;
+  margin-top: 0.375rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background-color: var(--cream);
+  padding: 0.6rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+/* iOS Safari gives date fields a native width that overflows the column; reset it. */
+.slip-input[type="date"] {
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 0;
+}
+
+.slip-input[type="date"]::-webkit-date-and-time-value {
+  text-align: left;
+}
+
+.flavor-picker-input {
+  display: block;
+  width: 100%;
+  min-height: 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  background-color: var(--paper);
+  padding: 0.6rem 1rem 0.6rem 2.5rem;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.flavor-picker-input::placeholder {
+  color: rgba(92, 67, 54, 0.6);
+}
+
+.flavor-picker-input:focus-visible {
+  outline-offset: 2px;
+}
+
+.flavor-picker-list {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  left: 0;
+  max-height: 16rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: 1rem;
+  background-color: var(--paper);
+  padding: 0.35rem;
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 18px 36px -16px rgba(42, 33, 28, 0.35);
+}
+
+.flavor-picker-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-radius: 0.65rem;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.95rem;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.flavor-picker-option[aria-selected="true"] {
+  background-color: var(--foam);
+}
+
+.flavor-picker-hint {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--bark);
+}
+
+.flavor-picker-empty {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  left: 0;
+  border-radius: 1rem;
+  background-color: var(--paper);
+  padding: 0.85rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  color: var(--bark);
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 18px 36px -16px rgba(42, 33, 28, 0.35);
+}
+
+.flavor-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 9999px;
+  background-color: var(--paper);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ranger);
+  box-shadow: inset 0 0 0 1px var(--line);
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.flavor-chip span {
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--bark);
+}
+
+@media (hover: hover) {
+  .flavor-chip:hover {
+    box-shadow: inset 0 0 0 1px var(--ranger);
+  }
+}
+
+/* Contact prices: a menu board with dotted leaders, in the stitch dots used across the site. */
+.price-board {
+  scroll-margin-top: 8rem;
+  border-radius: 1.25rem;
+  background-color: var(--paper);
+  padding: 1.5rem;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+@media (min-width: 640px) {
+  .price-board {
+    padding: 1.75rem 2rem;
+  }
+}
+
+.price-board-unit,
+.price-board-group,
+.price-facts dt {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bark);
+}
+
+.price-board-group {
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.45rem 0;
+  color: var(--ink);
+}
+
+.price-row-leader {
+  flex: 1;
+  min-width: 1rem;
+  height: 4px;
+  background-image: radial-gradient(circle, rgba(92, 67, 54, 0.45) 1px, transparent 1.2px);
+  background-size: 7px 4px;
+  background-repeat: repeat-x;
+  background-position: left center;
+}
+
+.price-row-price {
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ranger);
+}
+
+.price-facts {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+/* Label beside value, so the long volume note reads as a sentence at any width. */
+.price-facts > div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.price-facts dd {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -940,6 +1410,15 @@ body {
 
   .wanted {
     animation: none;
+  }
+
+  .right-now-dot[data-live]::after {
+    animation: none;
+    opacity: 0;
+  }
+
+  .week-stamp-link {
+    transition: none;
   }
 
   .site-bar,

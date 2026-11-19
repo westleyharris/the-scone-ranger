@@ -64,6 +64,8 @@ export type Market = {
   when: string;
   days: number[];
   season: [number, number];
+  /** Opening and closing hour, 24-hour clock, Spokane time. Matches `when`. */
+  hours: [number, number];
 };
 
 export const markets: Market[] = [
@@ -73,6 +75,7 @@ export const markets: Market[] = [
     when: "Tuesdays (May – October) 3pm – 7pm",
     days: [2],
     season: [5, 10],
+    hours: [15, 19],
   },
   {
     name: "Kendall Yards Night Market",
@@ -80,6 +83,7 @@ export const markets: Market[] = [
     when: "Wednesdays (May -September) 5pm – 8pm",
     days: [3],
     season: [5, 9],
+    hours: [17, 20],
   },
   {
     name: "Spokane Farmers’ Market",
@@ -87,6 +91,7 @@ export const markets: Market[] = [
     when: "Saturdays and Wednesday (May -October ) 8am – 12pm",
     days: [3, 6],
     season: [5, 10],
+    hours: [8, 12],
   },
   {
     name: "Liberty Lake Farmers’ Market",
@@ -94,6 +99,7 @@ export const markets: Market[] = [
     when: "Saturdays (May – October) 9am – 1pm",
     days: [6],
     season: [5, 10],
+    hours: [9, 13],
   },
 ];
 
