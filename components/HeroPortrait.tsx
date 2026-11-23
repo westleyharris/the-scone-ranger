@@ -1,30 +1,76 @@
 import Image from "next/image";
+import { Sancreek, Special_Elite } from "next/font/google";
+
+/*
+  Poster type, loaded here so only the home page pays for it. Both are free (Google Fonts,
+  OFL / Apache) stand-ins until the client confirms the real fonts:
+  - Sancreek, a spurred Western display face, for WANTED and REWARD, after the sticker's RANGER
+  - Special Elite, a worn typewriter face, for the name, after the business card
+*/
+const posterDisplay = Sancreek({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-poster-display",
+});
+
+const posterTypewriter = Special_Elite({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-poster-typewriter",
+});
 
 /**
- * Home hero: the owners on a letterpress WANTED broadside, hung from one nail.
- * The reward is the Orange Cranberry scone from the story ("love at first bite").
+ * Home hero: The Scone Ranger on a letterpress WANTED broadside, hung from one nail.
+ * Wording is the client's (November 2026 feedback). The Orange Cranberry scone
+ * sits off the lower-left corner, below the centred reward.
  * Every measure is in em off .wanted-wrap, so the lockup scales as one piece.
+ *
+ * Period art, both public domain (Wikimedia Commons), no credit required:
+ * - pointing hands: "GPO Index 9 1891", a US Government Printing Office type ornament
+ *   (public/images/ornaments/pointing-hand-1891.svg, recoloured to the poster ink)
+ * - scene behind the portrait: "Spokane Falls, W.T." engraving, 1882, cropped to two
+ *   panels and toned (public/images/poster-spokane-falls.jpg)
  */
 export function HeroPortrait() {
   return (
     <div className="hero-stage">
-      <div className="wanted-wrap">
+      <div className={`wanted-wrap ${posterDisplay.variable} ${posterTypewriter.variable}`}>
         <figure className="wanted">
           <PosterSheet />
           <span className="wanted-nail" aria-hidden="true" />
 
           <p className="wanted-title">Wanted</p>
           <p className="wanted-charge">
-            <span>for baking scones that aren’t dry</span>
+            <Pointer side="left" />
+            <span>for scones that are not dry</span>
+            <Pointer side="right" />
           </p>
 
+          {/*
+            Cropped from Dave's separated business-card art (scone-ranger-separated.jpeg)
+            to the rope oval and stamp. Its white ground multiplies away into the paper.
+          */}
           <div className="wanted-photo">
+            {/*
+              Spokane Falls either side of the portrait. Built to this art's exact geometry:
+              it is blank wherever the rope oval and stamp sit, so it never shows through them.
+            */}
             <Image
-              src="/images/hero-scone.jpg"
-              alt="David and Evelyn Ainley, the owners of The Scone Ranger"
-              width={2048}
-              height={1155}
-              sizes="(min-width: 640px) 600px, 100vw"
+              src="/images/poster-spokane-falls.jpg"
+              alt=""
+              aria-hidden="true"
+              width={1214}
+              height={593}
+              sizes="(min-width: 640px) 410px, 75vw"
+              loading="eager"
+              className="wanted-scene"
+            />
+            <Image
+              src="/images/scone-ranger-poster.jpg"
+              alt="The Scone Ranger: a pencil portrait of a smiling masked cowboy in a rope frame, stamped “Surprisingly moist scones”"
+              width={660}
+              height={941}
+              sizes="(min-width: 640px) 260px, 50vw"
               loading="eager"
               fetchPriority="high"
               className="wanted-photo-img"
@@ -32,11 +78,14 @@ export function HeroPortrait() {
           </div>
 
           <figcaption>
-            <p className="wanted-name">Mr. &amp; Mrs. Scone Ranger</p>
-            <p className="wanted-aka">a.k.a. David &amp; Evelyn Ainley · Spokane</p>
+            <p className="wanted-name">The Scone Ranger</p>
             <div className="wanted-reward">
               <p className="wanted-reward-title">Reward</p>
-              <p className="wanted-reward-line">Love at first bite</p>
+              {/* Breaks after the ellipsis; the second half wraps on its own. */}
+              <p className="wanted-reward-line">
+                <span className="block">Dozens of crave-worthy flavors…</span>
+                regardless of most dietary restrictions
+              </p>
             </div>
           </figcaption>
         </figure>
@@ -53,6 +102,16 @@ export function HeroPortrait() {
         />
       </div>
     </div>
+  );
+}
+
+/** A printer's pointing hand at the end of a tapered rule, aimed at the line it flanks. */
+function Pointer({ side }: { side: "left" | "right" }) {
+  return (
+    <span className="wanted-pointer" data-side={side} aria-hidden="true">
+      <i className="wanted-pointer-rule" />
+      <Image src="/images/ornaments/pointing-hand-1891.svg" alt="" width={494} height={244} className="wanted-pointer-hand" />
+    </span>
   );
 }
 

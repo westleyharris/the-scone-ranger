@@ -6,7 +6,7 @@ import { createPortal } from "react-dom";
 import { quoteForFlavor } from "@/lib/content";
 import { defaultRetailTier, MIN_SCONES, retailTiers } from "@/lib/order";
 import type { FlavorPhoto } from "@/lib/photo-types";
-import { Stitch, Wheat } from "@/components/Marks";
+import { Mask, Stitch } from "@/components/Marks";
 import { useOrder } from "@/components/OrderProvider";
 
 function retailPrice(name: string) {
@@ -131,7 +131,7 @@ export function FlavorPopup({
               )
             ) : (
               <div className="flex h-full items-center justify-center" aria-hidden="true">
-                <Wheat className="h-20 w-20 text-ranger/20" />
+                <Mask className="h-20 w-20 text-ranger/20" />
               </div>
             )}
           </div>

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { defaultRetailTier, retailTiers } from "@/lib/order";
 import type { FlavorPhoto } from "@/lib/photo-types";
 import { FlavorPopup } from "@/components/FlavorPopup";
-import { Wheat } from "@/components/Marks";
+import { Mask } from "@/components/Marks";
 import { useOrder } from "@/components/OrderProvider";
 
 function retailPrice(name: string) {
@@ -95,7 +95,7 @@ export function FlavorCard({
             )
           ) : (
             <div className="flex h-full w-full items-center justify-center" aria-hidden="true">
-              <Wheat className={featured ? "h-14 w-14 text-ranger/18" : "h-12 w-12 text-ranger/20"} />
+              <Mask className={featured ? "h-14 w-14 text-ranger/18" : "h-12 w-12 text-ranger/20"} />
             </div>
           )}
         </button>

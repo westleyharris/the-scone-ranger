@@ -1,5 +1,5 @@
 import { markets, stockists } from "@/lib/content";
-import { DayStamp, Wheat } from "@/components/Marks";
+import { DayStamp, Mask } from "@/components/Marks";
 import { Directions, TodayMark } from "@/components/Places";
 
 export function StockistList() {
@@ -8,7 +8,7 @@ export function StockistList() {
       {stockists.map((group) => (
         <section key={group.city}>
           <h3 className="flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-bark uppercase">
-            <Wheat className="h-8 w-8 text-ranger" />
+            <Mask className="h-8 w-8 text-ranger" />
             {group.city}
           </h3>
           <ul className="mt-3 divide-y divide-line border-y border-line">

@@ -4,26 +4,22 @@ export function Stitch({ className = "" }: { className?: string }) {
   return <div aria-hidden="true" className={`stitch ${className}`} />;
 }
 
-export function Wheat({ className = "h-8 w-8" }: { className?: string }) {
+/**
+ * The Scone Ranger's mask, untied: solid, eyes cut out, ties hanging loose.
+ * The viewBox is nudged down so the mask and ties sit centred in the box.
+ */
+export function Mask({ className = "h-8 w-8" }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M12 22V9" />
-      <path d="M12 18c-2.4-.4-4-1.8-4.4-3.8 2 .2 3.4 1 4.4 2.4" />
-      <path d="M12 18c2.4-.4 4-1.8 4.4-3.8-2 .2-3.4 1-4.4 2.4" />
-      <path d="M12 14.2c-2.1-.3-3.4-1.5-3.8-3.2 1.7.2 2.9.9 3.8 2" />
-      <path d="M12 14.2c2.1-.3 3.4-1.5 3.8-3.2-1.7.2-2.9.9-3.8 2" />
-      <path d="M12 10.8c-1.7-.2-2.8-1.2-3-2.6 1.4.15 2.3.7 3 1.6" />
-      <path d="M12 10.8c1.7-.2 2.8-1.2 3-2.6-1.4.15-2.3.7-3 1.6" />
-      <path d="M10.4 6.8C10.9 5.4 11.4 4.4 12 3.6c.6.8 1.1 1.8 1.6 3.2" />
+    <svg viewBox="0 2.4 24 24" aria-hidden="true" className={className}>
+      <path
+        fill="currentColor"
+        fillRule="evenodd"
+        d="M2.6 9.4C4.6 7.8 8.8 7.2 12 8.9c3.2-1.7 7.4-1.1 9.4.5-.2 3-1.8 5.2-4.2 5.2-2 0-3.8-1-5.2-2.2-1.4 1.2-3.2 2.2-5.2 2.2-2.4 0-4-2.2-4.2-5.2ZM5.9 11c1.1-1.3 3.4-1.4 4.4-.2-1.1 1.3-3.3 1.4-4.4.2ZM18.1 11c-1.1-1.3-3.4-1.4-4.4-.2 1.1 1.3 3.3 1.4 4.4.2Z"
+      />
+      <g fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round">
+        <path d="M2.9 9.9C1.4 11.6 1.6 13.8 2.6 15.6s.6 3.8-.8 5.2" />
+        <path d="M21.1 9.9c1.3 1.9 1.1 4.1.1 5.9-.8 1.6-.4 3.8.8 5.4" />
+      </g>
     </svg>
   );
 }
@@ -31,7 +27,7 @@ export function Wheat({ className = "h-8 w-8" }: { className?: string }) {
 export function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <p className="flex items-center gap-2 text-xs font-semibold tracking-[0.22em] text-bark uppercase">
-      <Wheat className="h-8 w-8 text-ranger" />
+      <Mask className="h-8 w-8 text-ranger" />
       {children}
     </p>
   );
